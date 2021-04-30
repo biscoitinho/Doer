@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="title">
+      Tasks for {{ tablename.replace("_", " ")}}:
+    </h1>
+  {% for t in query %}
+    {% if current_user.email == t.email %}
+      <tr>
+        <td>
+          {{t.name}}
+          {{t.description}}
+          {% if t.status == 0 %}
+            To Do
+          {% elif t.status == 1 %}
+            In progress
+          {% elif t.status == 2 %}
+            Done
+          {% endif %}
+        </td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

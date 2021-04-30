@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 from .models import User, Ttable, Task
+from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import session
 from . import db
 
 main = Blueprint('main', __name__)
@@ -23,3 +25,16 @@ def tables():
 
     if not current_user.is_authenticated:
       return redirect(url_for('index'))
+
+@main.route('/tasks/<tablename>', methods=["GET", "POST"])
+@login_required
+def tasks(tablename):
+    query = db.session.query(
+                            Task.id, Task.name,
+                            Task.description,
+                            Task.status,
+                            Ttable.email
+                            ).join(
+                                  Ttable,
+                                  Ttable.id == Task.ttable_id)
+    return render_template("tasks.html", tablename = tablename, query = query)
