@@ -26,7 +26,7 @@ def tables():
     if not current_user.is_authenticated:
       return redirect(url_for('index'))
 
-@main.route('/tasks/<tablename>', methods=["GET", "POST"])
+@main.route('/<tablename>/tasks', methods=["GET", "POST"])
 @login_required
 def tasks(tablename):
     query = db.session.query(
@@ -38,3 +38,33 @@ def tasks(tablename):
                                   Ttable,
                                   Ttable.id == Task.ttable_id)
     return render_template("tasks.html", tablename = tablename, query = query)
+
+@main.route('/<tablename>/<id>', methods=["GET", "POST"])
+@login_required
+def task(tablename, id):
+    query = db.session.query(
+                            Task.id, Task.name,
+                            Task.description,
+                            Task.status,
+                            Ttable.email
+                            ).join(
+                                  Ttable,
+                                  Ttable.id == Task.ttable_id).filter(
+                                                                      Task.id == id)
+    return render_template("task.html", tablename = tablename, id = Task.id, query = query)
+
+@main.route('/<tablename>/<id>/delete', methods=['DELETE'])
+@login_required
+def delete_task(tablename, id):
+    get_task = db.session.query(
+                            Task.id,
+                            Ttable.email,
+                            Ttable.name
+                            ).join(
+                                  Ttable,
+                                  Ttable.id == Task.ttable_id).filter(
+                                                                      Task.id == id,
+                                                                      Ttable.name == tablename)
+    db.session.delete(get_task)
+    db.session.commit()
+    return "Deleted"
