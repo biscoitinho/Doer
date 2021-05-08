@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from .models import User, Ttable, Task
 from sqlalchemy.orm import joinedload
@@ -26,7 +26,7 @@ def tables():
     if not current_user.is_authenticated:
       return redirect(url_for('index'))
 
-@main.route('/<tablename>/tasks', methods=["GET", "POST"])
+@main.route('/tables/<tablename>/tasks', methods=["GET", "POST"])
 @login_required
 def tasks(tablename):
     query = db.session.query(
@@ -39,7 +39,7 @@ def tasks(tablename):
                                   Ttable.id == Task.ttable_id)
     return render_template("tasks.html", tablename = tablename, query = query)
 
-@main.route('/<tablename>/<id>', methods=["GET", "POST"])
+@main.route('/tables/<tablename>/task/<id>', methods=["GET", "POST"])
 @login_required
 def task(tablename, id):
     query = db.session.query(
@@ -53,18 +53,14 @@ def task(tablename, id):
                                                                       Task.id == id)
     return render_template("task.html", tablename = tablename, id = Task.id, query = query)
 
-@main.route('/<tablename>/<id>/delete', methods=['DELETE'])
+@main.route('/tables/<tablename>/task/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def delete_task(tablename, id):
-    get_task = db.session.query(
-                            Task.id,
-                            Ttable.email,
-                            Ttable.name
-                            ).join(
-                                  Ttable,
-                                  Ttable.id == Task.ttable_id).filter(
-                                                                      Task.id == id,
-                                                                      Ttable.name == tablename)
+    query = Ttable.query.all()
+    get_task = Task.query.filter(id == Task.id).first()
+    if not get_task:
+        return render_template("tables.html", ttable = query, name = current_user.name)
+
     db.session.delete(get_task)
     db.session.commit()
-    return "Deleted"
+    return render_template("tables.html", ttable = query, name = current_user.name)
