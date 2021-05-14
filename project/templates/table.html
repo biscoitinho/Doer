@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+  Table
+</h1>
+  <form method="POST" action="/table">
+      <div class="field">
+          <div class="control">
+              <input class="input is-large" type="tablename" name="tablename" placeholder="Table name">
+          </div>
+      </div>
+      <button class="button is-block is-info is-large is-fullwidth">Create</button>
+  </form>
+{% endblock %}

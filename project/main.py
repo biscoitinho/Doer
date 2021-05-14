@@ -26,17 +26,35 @@ def tables():
     if not current_user.is_authenticated:
       return redirect(url_for('index'))
 
-@main.route('/tables/<tablename>/tasks', methods=["GET", "POST"])
+@main.route('/table')
+@login_required
+def table():
+    return render_template('table.html')
+
+@main.route('/table', methods=['GET', 'POST'])
+@login_required
+def create_table():
+    tablename = request.form.get('tablename')
+    new_table = Ttable(name = tablename, email = current_user.email)
+
+    db.session.add(new_table)
+    db.session.commit()
+
+    return render_template('index.html')
+
+@main.route('/tables/<tablename>/tasks', methods=["GET"])
 @login_required
 def tasks(tablename):
     query = db.session.query(
                             Task.id, Task.name,
                             Task.description,
                             Task.status,
-                            Ttable.email
+                            Task.ttable_id,
+                            Ttable.email,
                             ).join(
                                   Ttable,
-                                  Ttable.id == Task.ttable_id)
+                                  Ttable.id == Task.ttable_id).filter(Ttable.name == tablename.replace("_", " "))
+    print(query)
     return render_template("tasks.html", tablename = tablename, query = query)
 
 @main.route('/tables/<tablename>/task/<id>', methods=["GET", "POST"])

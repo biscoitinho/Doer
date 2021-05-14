@@ -4,6 +4,7 @@
 <h1 class="title">
   Welcome, {{ name }} here are your tables!
 </h1>
+  <a href="{{ url_for('main.table')}}">Create table</a>
   {% for tt in ttable %}
     <tr>
       <td>
