@@ -57,6 +57,25 @@ def tasks(tablename):
     print(query)
     return render_template("tasks.html", tablename = tablename, query = query)
 
+@main.route('/tables/<tablename>/task/create')
+@login_required
+def new_task(tablename):
+    return render_template("new_task.html", tablename = tablename)
+
+@main.route('/tables/<tablename>/task/create', methods=['GET', 'POST'])
+@login_required
+def create_task(tablename):
+    name = request.form.get('name')
+    description = request.form.get('description')
+    tid = db.session.query(Ttable.id).filter(Ttable.name == tablename.replace("_", " "))
+    status = request.form['status']
+    new_task = Task(name = name, description = description, ttable_id = tid, status = status)
+
+    db.session.add(new_task)
+    db.session.commit()
+
+    return render_template('index.html')
+
 @main.route('/tables/<tablename>/task/<id>', methods=["GET", "POST"])
 @login_required
 def task(tablename, id):

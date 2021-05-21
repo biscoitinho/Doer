@@ -4,6 +4,7 @@
     <h1 class="title">
       Tasks for {{ tablename.replace("_", " ")}}:
     </h1>
+   <button><a href="{{ url_for('main.new_task', tablename=tablename.replace(" ", "_")) }}">Create Task</a></button>
   {% for t in query %}
     {% if current_user.email == t.email %}
       <tr>
