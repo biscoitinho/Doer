@@ -4,6 +4,7 @@ from .models import User, Ttable, Task
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import session
 from . import db
+import sys
 
 main = Blueprint('main', __name__)
 
@@ -41,6 +42,33 @@ def create_table():
     db.session.commit()
 
     return render_template('index.html')
+
+@main.route('/tables/<tablename>/<id>/edit', methods=['GET'])
+@login_required
+def edit_table_form(tablename, id):
+    return render_template('edit_table.html', tablename = tablename.replace(" ", "_"), id = id)
+
+@main.route('/tables/<tablename>/<id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_table(tablename, id):
+    new_tablename = request.form.get('name')
+    edit = db.session.query(Ttable).filter(Ttable.name == tablename).filter(Ttable.id == id).first()
+    edit.name = new_tablename
+    db.session.commit()
+
+    return render_template('index.html')
+
+@main.route('/tables/<tablename>/<id>/delete', methods=['GET', 'POST', 'DELETE'])
+@login_required
+def delete_table(tablename, id):
+    query = Ttable.query.all()
+    get_table = Ttable.query.filter(id == Ttable.id).first()
+    if not get_table:
+        return render_template("tables.html", ttable = query, name = current_user.name)
+
+    db.session.delete(get_table)
+    db.session.commit()
+    return render_template("index.html")
 
 @main.route('/tables/<tablename>/tasks', methods=["GET"])
 @login_required
