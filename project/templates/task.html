@@ -17,7 +17,9 @@
           {% elif t.status == 2 %}
             Done
           {% endif %}
-          <button class="button is-info">Edit</button>
+          <button class="button is-info">
+            <a href="{{ url_for('main.edit_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Edit</a>
+          </button>
           <button class="button is-danger">
             <a href="{{ url_for('main.delete_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Delete</a>
           </button>

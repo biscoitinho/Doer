@@ -53,8 +53,9 @@ def edit_table_form(tablename, id):
 def edit_table(tablename, id):
     new_tablename = request.form.get('name')
     edit = db.session.query(Ttable).filter(Ttable.name == tablename).filter(Ttable.id == id).first()
-    edit.name = new_tablename
-    db.session.commit()
+    if new_tablename:
+      edit.name = new_tablename
+      db.session.commit()
 
     return render_template('index.html')
 
@@ -117,6 +118,24 @@ def task(tablename, id):
                                   Ttable.id == Task.ttable_id).filter(
                                                                       Task.id == id)
     return render_template("task.html", tablename = tablename, id = Task.id, query = query)
+
+@main.route('/tables/<tablename>/task/<id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_task(tablename, id):
+    new_name = request.form.get('name')
+    new_description = request.form.get('description')
+    new_status = request.form.get('status')
+    edit = Task.query.filter(id == Task.id).first()
+    if new_name:
+        edit.name = new_name
+    if new_description:
+        edit.description = new_description
+    if new_status:
+        edit.status = new_status
+
+    db.session.commit()
+
+    return render_template('edit_task.html', tablename = tablename, id = id)
 
 @main.route('/tables/<tablename>/task/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required
