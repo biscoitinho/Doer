@@ -10,6 +10,8 @@
           {{t.id}}
           {{t.name}}
           {{t.description}}
+      </td>
+      <td>
           {% if t.status == 0 %}
             To Do
           {% elif t.status == 1 %}
@@ -17,9 +19,13 @@
           {% elif t.status == 2 %}
             Done
           {% endif %}
+      </td>
+      <td>
           <button class="button is-info">
             <a href="{{ url_for('main.edit_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Edit</a>
           </button>
+      </td>
+      <td>
           <button class="button is-danger">
             <a href="{{ url_for('main.delete_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Delete</a>
           </button>

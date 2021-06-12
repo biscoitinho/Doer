@@ -4,22 +4,28 @@
 <h1 class="title">
   Welcome, {{ name }} here are your tables!
 </h1>
-  <a href="{{ url_for('main.table')}}">Create table</a>
+  <button><a href="{{ url_for('main.table')}}">Create table</a></button>
   {% for tt in ttable %}
-    <tr>
-      <td>
-        {% if current_user.email == tt.email %}
+    <table style="margin:auto;">
+      <tr>
+        <td>
+          {% if current_user.email == tt.email %}
           <a href="{{ url_for('main.tasks', tablename=tt.name.replace(" ", "_")) }}" class="navbar-item">
-          {{tt.name}}
-          {{tt.email}}
+            {{tt.name}}
+            {{tt.email}}
+            </a>
+        </td>
+        <td>
           <button class="button is-danger">
             <a href="{{ url_for('main.delete_table', tablename=tt.name.replace(" ", "_"), id = tt.id) }}">Delete</a>
           </button>
-          <button class="button is-info">
+        </td>
+        <td>
+          <button class="button is-info" style="margin-left:5px;">
             <a href="{{ url_for('main.edit_table_form', tablename=tt.name.replace(" ", "_"), id = tt.id) }}">Edit</a>
           </button>
+        </td>
         {% endif %}
-      </td>
     </tr>
   {% endfor %}
 {% endblock %}

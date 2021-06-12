@@ -7,20 +7,22 @@
    <button><a href="{{ url_for('main.new_task', tablename=tablename.replace(" ", "_")) }}">Create Task</a></button>
   {% for t in query %}
     {% if current_user.email == t.email %}
+      <table style="margin:auto;">
       <tr>
         <td>
-          <a href="{{ url_for('main.task', tablename=tablename.replace(" ", "_"), id = t.id) }}">{{ t.name }}</a>
+          <a href="{{ url_for('main.task', tablename=tablename.replace(" ", "_"), id = t.id) }}" class="navbar-item">{{ t.name }}</a>
         </td>
         <td>
           {% if t.status == 0 %}
-            To Do
+            <span class="tag is-info">To Do</span>
           {% elif t.status == 1 %}
-            In progress
+           <span class="tag is-info">In Progress</span>
           {% elif t.status == 2 %}
-            Done
+            <span class="tag is-info">Done</span>
           {% endif %}
         </td>
       </tr>
+      </table>
     {% endif %}
   {% endfor %}
 {% endblock %}
