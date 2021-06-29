@@ -5,28 +5,31 @@
   Task
 </h1>
   {% for t in query %}
+  <table class="doer-table">
     <tr>
       <td>
           {{t.id}}
           {{t.name}}
-          {{t.description}}
+      </td>
+      <td>
+          <textarea class="doer-ta">{{t.description}}</textarea>
       </td>
       <td>
           {% if t.status == 0 %}
-            To Do
+           <button class="button is-warning doer-button">To Do</button>
           {% elif t.status == 1 %}
-            In progress
+            <button class="button is-warning doer-button">In progress</button>
           {% elif t.status == 2 %}
-            Done
+            <button class="button is-warning doer-button">Done</button>
           {% endif %}
       </td>
       <td>
-          <button class="button is-info">
+          <button class="button is-info doer-button">
             <a href="{{ url_for('main.edit_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Edit</a>
           </button>
       </td>
       <td>
-          <button class="button is-danger">
+          <button class="button is-danger doer-button">
             <a href="{{ url_for('main.delete_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Delete</a>
           </button>
       </td>

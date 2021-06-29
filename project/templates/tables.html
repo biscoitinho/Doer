@@ -4,9 +4,9 @@
 <h1 class="title">
   Welcome, {{ name }} here are your tables!
 </h1>
-  <button><a href="{{ url_for('main.table')}}">Create table</a></button>
+  <button class="doer-button"><a href="{{ url_for('main.table')}}">Create table</a></button>
   {% for tt in ttable %}
-    <table style="margin:auto;">
+    <table class="doer-table">
       <tr>
         <td>
           {% if current_user.email == tt.email %}
@@ -21,7 +21,7 @@
           </button>
         </td>
         <td>
-          <button class="button is-info" style="margin-left:5px;">
+          <button class="button is-info doer-button">
             <a href="{{ url_for('main.edit_table_form', tablename=tt.name.replace(" ", "_"), id = tt.id) }}">Edit</a>
           </button>
         </td>

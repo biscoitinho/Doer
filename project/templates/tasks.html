@@ -4,21 +4,21 @@
     <h1 class="title">
       Tasks for {{ tablename.replace("_", " ")}}:
     </h1>
-   <button><a href="{{ url_for('main.new_task', tablename=tablename.replace(" ", "_")) }}">Create Task</a></button>
+   <button class="doer-button"><a href="{{ url_for('main.new_task', tablename=tablename.replace(" ", "_")) }}">Create Task</a></button>
   {% for t in query %}
     {% if current_user.email == t.email %}
-      <table style="margin:auto;">
+      <table class="doer-table">
       <tr>
         <td>
           <a href="{{ url_for('main.task', tablename=tablename.replace(" ", "_"), id = t.id) }}" class="navbar-item">{{ t.name }}</a>
         </td>
         <td>
           {% if t.status == 0 %}
-            <span class="tag is-info">To Do</span>
+            <span class="button is-info">To Do</span>
           {% elif t.status == 1 %}
-           <span class="tag is-info">In Progress</span>
+           <span class="button is-info">In Progress</span>
           {% elif t.status == 2 %}
-            <span class="tag is-info">Done</span>
+            <span class="button is-info">Done</span>
           {% endif %}
         </td>
       </tr>
