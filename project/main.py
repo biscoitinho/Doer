@@ -135,7 +135,7 @@ def edit_task(tablename, id):
 
     db.session.commit()
 
-    return render_template('edit_task.html', tablename = tablename, id = id)
+    return render_template('edit_task.html', tablename = tablename, id = id, description = edit.description, name = edit.name)
 
 @main.route('/tables/<tablename>/task/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required
