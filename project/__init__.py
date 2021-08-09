@@ -6,12 +6,17 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(env=None):
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = 'secret-key-goes-here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    if env == 'TEST':
+        app.config['SECRET_KEY'] = 'secret-key-goes-here'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    elif env == None:
+        app.config['SECRET_KEY'] = 'secret-key-goes-here'
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
 

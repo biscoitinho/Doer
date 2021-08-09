@@ -41,7 +41,8 @@ def create_table():
     db.session.add(new_table)
     db.session.commit()
 
-    return render_template('index.html')
+    #return render_template('index.html')
+    return redirect(url_for('main.tables'))
 
 @main.route('/tables/<tablename>/<id>/edit', methods=['GET'])
 @login_required
