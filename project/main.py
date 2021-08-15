@@ -53,12 +53,12 @@ def edit_table_form(tablename, id):
 @login_required
 def edit_table(tablename, id):
     new_tablename = request.form.get('name')
-    edit = db.session.query(Ttable).filter(Ttable.name == tablename).filter(Ttable.id == id).first()
+    edit = db.session.query(Ttable).filter(Ttable.name == tablename.replace("_", " ")).filter(Ttable.id == id).first()
     if new_tablename:
       edit.name = new_tablename
       db.session.commit()
 
-    return render_template('index.html')
+      return render_template("index.html")
 
 @main.route('/tables/<tablename>/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required
