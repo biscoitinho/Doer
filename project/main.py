@@ -68,6 +68,8 @@ def delete_table(tablename, id):
     if not get_table:
         return render_template("tables.html", ttable = query, name = current_user.name)
 
+    #Delete all the tasks to the corresponding table
+    db.session.query(Task).filter(Task.ttable_id == id).delete()
     db.session.delete(get_table)
     db.session.commit()
     return render_template("index.html")
@@ -84,7 +86,6 @@ def tasks(tablename):
                             ).join(
                                   Ttable,
                                   Ttable.id == Task.ttable_id).filter(Ttable.name == tablename.replace("_", " "))
-    print(query)
     return render_template("tasks.html", tablename = tablename, query = query)
 
 @main.route('/tables/<tablename>/task/create')
@@ -95,16 +96,19 @@ def new_task(tablename):
 @main.route('/tables/<tablename>/task/create', methods=['GET', 'POST'])
 @login_required
 def create_task(tablename):
+    query = Ttable.query.all()
     name = request.form.get('name')
     description = request.form.get('description')
-    tid = db.session.query(Ttable.id).filter(Ttable.name == tablename.replace("_", " "))
-    status = request.form['status']
+    # SCALAR - Return the first element of the first result or None if no rows present.
+    # If multiple rows are returned, raises MultipleResultsFound.
+    tid = db.session.query(Ttable.id).filter(Ttable.name == tablename.replace("_", " ")).scalar()
+    status = request.form.get('status')
     new_task = Task(name = name, description = description, ttable_id = tid, status = status)
 
     db.session.add(new_task)
     db.session.commit()
 
-    return render_template('index.html')
+    return render_template("tables.html", ttable = query, name = current_user.name)
 
 @main.route('/tables/<tablename>/task/<id>', methods=["GET", "POST"])
 @login_required
