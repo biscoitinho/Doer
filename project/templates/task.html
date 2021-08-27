@@ -16,15 +16,15 @@
       </td>
       <td>
           {% if t.status == 0 %}
-           <button class="button is-warning doer-button">To Do</button>
+           <button class="button is-info doer-button">To Do</button>
           {% elif t.status == 1 %}
             <button class="button is-warning doer-button">In progress</button>
           {% elif t.status == 2 %}
-            <button class="button is-warning doer-button">Done</button>
+            <button class="button is-success doer-button">Done</button>
           {% endif %}
       </td>
       <td>
-          <button class="button is-info doer-button">
+          <button class="button is-link doer-button">
             <a href="{{ url_for('main.edit_task', tablename=tablename.replace(" ", "_"), id = t.id) }}">Edit</a>
           </button>
       </td>
