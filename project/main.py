@@ -36,13 +36,22 @@ def table():
 @login_required
 def create_table():
     tablename = request.form.get('tablename')
-    new_table = Ttable(name = tablename, email = current_user.email)
+    if "_" in tablename:
+      tabname = tablename.replace("_", " ")
+    else:
+      tabname = tablename
 
-    db.session.add(new_table)
-    db.session.commit()
+    get_table = Ttable.query.filter(tabname == Ttable.name).first()
+    if tabname in str(get_table):
+      #FLASH MESSAGE HERE
+      return redirect(url_for('main.tables'))
+    else:
+      new_table = Ttable(name = tabname, email = current_user.email)
 
-    #return render_template('index.html')
-    return redirect(url_for('main.tables'))
+      db.session.add(new_table)
+      db.session.commit()
+
+      return redirect(url_for('main.tables'))
 
 @main.route('/tables/<tablename>/<id>/edit', methods=['GET'])
 @login_required
@@ -53,12 +62,21 @@ def edit_table_form(tablename, id):
 @login_required
 def edit_table(tablename, id):
     new_tablename = request.form.get('name')
+    if "_" in new_tablename:
+      tabname = new_tablename.replace("_", " ")
+    else:
+      tabname = new_tablename
+
+    get_table = Ttable.query.filter(tabname == Ttable.name).first()
+    if tabname in str(get_table):
+      return redirect(url_for('main.tables'))
+      #FLASH MESSAGE HERE
     edit = db.session.query(Ttable).filter(Ttable.name == tablename.replace("_", " ")).filter(Ttable.id == id).first()
-    if new_tablename:
-      edit.name = new_tablename
+    if tabname:
+      edit.name = tabname
       db.session.commit()
 
-      return render_template("index.html")
+      return redirect(url_for('main.tables'))
 
 @main.route('/tables/<tablename>/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required
@@ -140,7 +158,11 @@ def edit_task(tablename, id):
 
     db.session.commit()
 
-    return render_template('edit_task.html', tablename = tablename, id = id, description = edit.description, name = edit.name)
+    #return render_template("tasks.html", tablename = tablename, query = query)
+    if request.method == "GET":
+        return render_template('edit_task.html', tablename = tablename, id = id, description = edit.description, name = edit.name)
+    if request.method == "POST":
+        return redirect(url_for('main.tables'))
 
 @main.route('/tables/<tablename>/task/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required

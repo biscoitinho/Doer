@@ -60,6 +60,31 @@ def test_create_table(test_client, init_database):
     assert b"test table" in response.data
     assert b"Welcome, Joe here are your tables!" in response.data
 
+def test_create_second_table(test_client, init_database):
+    """
+    GIVEN a Flask application
+    WHEN the '/table' page is posted to (POST)
+    THEN check the response is valid
+    """
+    response = test_client.post('/table',
+                                data=dict(tablename='second table'),
+                                follow_redirects=True)
+    assert response.status_code == 200
+    assert b"test table" in response.data
+    assert b"Welcome, Joe here are your tables!" in response.data
+def test_create_table_with_underscore(test_client, init_database):
+    """
+    GIVEN a Flask application
+    WHEN the '/table' page is posted to (POST)
+    THEN check the response is valid
+    """
+    response = test_client.post('/table',
+                                data=dict(tablename='test_table'),
+                                follow_redirects=True)
+    assert response.status_code == 200
+    assert b"test table" in response.data
+    assert b"Welcome, Joe here are your tables!" in response.data
+
 def test_edit_page(test_client, init_database):
     """
     GIVEN a Flask application
@@ -80,6 +105,17 @@ def test_edit_table(test_client, init_database):
                                 follow_redirects=True)
     assert response.status_code == 200
 
+def test_edit_table_with_underscore(test_client, init_database):
+    """
+    GIVEN a Flask application
+    WHEN the '/tables/test_table/1/edit' page is posted to (POST)
+    THEN check the response is valid
+    """
+    response = test_client.post('/tables/second_table/2/edit',
+                                data=dict(name='edit underscore table'),
+                                follow_redirects=True)
+    assert response.status_code == 200
+
 def test_check_edit(test_client, init_database):
     """
     GIVEN a Flask application
@@ -89,6 +125,7 @@ def test_check_edit(test_client, init_database):
     response = test_client.get('/tables', follow_redirects=True)
     assert response.status_code == 200
     assert b"edit test table" in response.data
+    assert b"edit underscore table" in response.data
 
 def test_delete_table(test_client, init_database):
     """
