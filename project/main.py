@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from .models import User, Ttable, Task
 from sqlalchemy.orm import joinedload
@@ -43,7 +43,7 @@ def create_table():
 
     get_table = Ttable.query.filter(tabname == Ttable.name).first()
     if tabname in str(get_table):
-      #FLASH MESSAGE HERE
+      flash("Table with this name already exists")
       return redirect(url_for('main.tables'))
     else:
       new_table = Ttable(name = tabname, email = current_user.email)
@@ -69,8 +69,9 @@ def edit_table(tablename, id):
 
     get_table = Ttable.query.filter(tabname == Ttable.name).first()
     if tabname in str(get_table):
+      flash("Table with this name already exists")
       return redirect(url_for('main.tables'))
-      #FLASH MESSAGE HERE
+
     edit = db.session.query(Ttable).filter(Ttable.name == tablename.replace("_", " ")).filter(Ttable.id == id).first()
     if tabname:
       edit.name = tabname
@@ -90,6 +91,7 @@ def delete_table(tablename, id):
     db.session.query(Task).filter(Task.ttable_id == id).delete()
     db.session.delete(get_table)
     db.session.commit()
+    flash("Table deleted")
     return render_template("index.html")
 
 @main.route('/tables/<tablename>/tasks', methods=["GET"])
@@ -174,4 +176,6 @@ def delete_task(tablename, id):
 
     db.session.delete(get_task)
     db.session.commit()
+    flash("Task deleted")
+
     return render_template("tables.html", ttable = query, name = current_user.name)
