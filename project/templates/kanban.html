@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="title">
+      Kanban board for {{ tablename.replace("_", " ")}}:
+    </h1>
+   <button class="doer-button"><a href="{{ url_for('main.tasks', tablename=tablename.replace(" ", "_")) }}">Tasks View</a></button>
+   <button class="doer-button"><a href="{{ url_for('main.new_task', tablename=tablename.replace(" ", "_")) }}">Create Task</a></button>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>To do</th>
+          <th>In Progress</th>
+          <th>Done</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {% for t in query %}
+              {% if current_user.email == t.email %}
+                {% if t.status == 0 %}
+                    <a href="{{ url_for('main.task', tablename=tablename.replace(" ", "_"), id = t.id) }}" class="navbar-item">{{ t.name }}</a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for t in query %}
+              {% if current_user.email == t.email %}
+                {% if t.status == 1 %}
+                    <a href="{{ url_for('main.task', tablename=tablename.replace(" ", "_"), id = t.id) }}" class="navbar-item">{{ t.name }}</a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </td>
+          <td>
+            {% for t in query %}
+              {% if current_user.email == t.email %}
+                {% if t.status == 2 %}
+                    <a href="{{ url_for('main.task', tablename=tablename.replace(" ", "_"), id = t.id) }}" class="navbar-item">{{ t.name }}</a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+{% endblock %}

@@ -108,6 +108,20 @@ def tasks(tablename):
                                   Ttable.id == Task.ttable_id).filter(Ttable.name == tablename.replace("_", " "))
     return render_template("tasks.html", tablename = tablename, query = query)
 
+@main.route('/tables/<tablename>/kanban', methods=["GET"])
+@login_required
+def kanban(tablename):
+    query = db.session.query(
+                            Task.id, Task.name,
+                            Task.description,
+                            Task.status,
+                            Task.ttable_id,
+                            Ttable.email,
+                            ).join(
+                                  Ttable,
+                                  Ttable.id == Task.ttable_id).filter(Ttable.name == tablename.replace("_", " "))
+    return render_template("kanban.html", tablename = tablename, query = query)
+
 @main.route('/tables/<tablename>/task/create')
 @login_required
 def new_task(tablename):
