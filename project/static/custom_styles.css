@@ -25,3 +25,16 @@
   width: 250px;
   height: 60px;
 }
+
+.todo-head {
+  background-color: #209cee;
+  color: #fff !important;
+}
+
+.progress-head {
+  background-color: #ffdd57;
+}
+
+.done-head {
+  background-color: #23d160;
+}
