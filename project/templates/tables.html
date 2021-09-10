@@ -12,7 +12,6 @@
           {% if current_user.email == tt.email %}
           <a href="{{ url_for('main.tasks', tablename=tt.name.replace(" ", "_")) }}" class="navbar-item">
             {{tt.name}}
-            {{tt.email}}
             </a>
         </td>
         <td>

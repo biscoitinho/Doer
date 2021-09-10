@@ -6,7 +6,7 @@
     </h1>
    <button class="doer-button"><a href="{{ url_for('main.tasks', tablename=tablename.replace(" ", "_")) }}">Tasks View</a></button>
    <button class="doer-button"><a href="{{ url_for('main.new_task', tablename=tablename.replace(" ", "_")) }}">Create Task</a></button>
-    <table class="table is-fullwidth">
+    <table class="table is-fullwidth is-bordered">
       <thead>
         <tr>
           <th class="todo-head">To do</th>

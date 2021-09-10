@@ -15,7 +15,9 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name = current_user.name)
+    number_of_tasks_done = Task.query.filter(Task.status == 2).count()
+    return render_template('profile.html',
+                          name = current_user.name, done = number_of_tasks_done)
 
 @main.route('/tables', methods=["GET", "POST"])
 @login_required
