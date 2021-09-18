@@ -15,7 +15,15 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    number_of_tasks_done = Task.query.filter(Task.status == 2).count()
+    number_of_tasks_done = db.session.query(
+                            Task.id,
+                            Task.status,
+                            Ttable.id,
+                            Ttable.email,
+                            Ttable.name
+                            ).join(
+                                  Ttable,
+                                  Ttable.id == Task.ttable_id).filter(Ttable.email == current_user.email)
     return render_template('profile.html',
                           name = current_user.name, done = number_of_tasks_done)
 

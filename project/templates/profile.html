@@ -4,6 +4,11 @@
 <h1 class="title">
   Welcome, {{ name }}!
 </h1>
-
-<h1>Total number of tasks done: {{ done }}</h1>
+<h1>Total number of tasks done:
+  {% for d in done %}
+    {% if d == done[-1] %}
+      {{ loop.length }}
+    {% endif %}
+  {% endfor %}
+</h1>
 {% endblock %}
