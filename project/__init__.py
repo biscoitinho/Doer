@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flasgger import Swagger
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -8,6 +9,7 @@ db = SQLAlchemy()
 
 def create_app(env=None):
     app = Flask(__name__)
+    swagger = Swagger(app)
 
     if env == 'TEST':
         app.config['SECRET_KEY'] = 'secret-key-goes-here'

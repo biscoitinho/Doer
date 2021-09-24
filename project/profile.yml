@@ -1,0 +1,5 @@
+Profile endpoint showing statisctics of user completed task
+---
+responses:
+  200:
+    description: Profile endpoint showing statisctics of user completed task
