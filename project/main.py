@@ -15,27 +15,29 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    number_of_tasks_done = db.session.query(
-                            Task.id,
-                            Task.status,
-                            Ttable.id,
-                            Ttable.email,
-                            Ttable.name
-                            ).join(
-                                  Ttable,
-                                  Ttable.id == Task.ttable_id).filter(Ttable.email == current_user.email)
+    no_of_done = db.session.query(
+                  Task.id,
+                  Task.status,
+                  Ttable.id,
+                  Ttable.email,
+                  Ttable.name
+                  ).join(
+                        Ttable,
+                        Ttable.id == Task.ttable_id).filter(
+                                                          Ttable.email == current_user.email).filter(
+                                                          Task.status == 2)
     return render_template('profile.html',
-                          name = current_user.name, done = number_of_tasks_done)
+                          name = current_user.name, done = no_of_done)
 
 @main.route('/tables', methods=["GET", "POST"])
 @login_required
 def tables():
     query = Ttable.query.all()
     if request.method == "GET":
-      return render_template("tables.html", ttable = query, name = current_user.name)
+        return render_template("tables.html", ttable = query, name = current_user.name)
 
     if not current_user.is_authenticated:
-      return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
 @main.route('/table')
 @login_required
@@ -47,21 +49,21 @@ def table():
 def create_table():
     tablename = request.form.get('tablename')
     if "_" in tablename:
-      tabname = tablename.replace("_", " ")
+        tabname = tablename.replace("_", " ")
     else:
-      tabname = tablename
+        tabname = tablename
 
     get_table = Ttable.query.filter(tabname == Ttable.name).first()
     if tabname in str(get_table):
-      flash("Table with this name already exists")
-      return redirect(url_for('main.tables'))
+        flash("Table with this name already exists")
+        return redirect(url_for('main.tables'))
     else:
-      new_table = Ttable(name = tabname, email = current_user.email)
+        new_table = Ttable(name = tabname, email = current_user.email)
 
-      db.session.add(new_table)
-      db.session.commit()
+        db.session.add(new_table)
+        db.session.commit()
 
-      return redirect(url_for('main.tables'))
+        return redirect(url_for('main.tables'))
 
 @main.route('/tables/<tablename>/<id>/edit', methods=['GET'])
 @login_required
@@ -73,21 +75,21 @@ def edit_table_form(tablename, id):
 def edit_table(tablename, id):
     new_tablename = request.form.get('name')
     if "_" in new_tablename:
-      tabname = new_tablename.replace("_", " ")
+        tabname = new_tablename.replace("_", " ")
     else:
-      tabname = new_tablename
+        tabname = new_tablename
 
     get_table = Ttable.query.filter(tabname == Ttable.name).first()
     if tabname in str(get_table):
-      flash("Table with this name already exists")
-      return redirect(url_for('main.tables'))
+        flash("Table with this name already exists")
+        return redirect(url_for('main.tables'))
 
     edit = db.session.query(Ttable).filter(Ttable.name == tablename.replace("_", " ")).filter(Ttable.id == id).first()
     if tabname:
-      edit.name = tabname
-      db.session.commit()
+        edit.name = tabname
+        db.session.commit()
 
-      return redirect(url_for('main.tables'))
+        return redirect(url_for('main.tables'))
 
 @main.route('/tables/<tablename>/<id>/delete', methods=['GET', 'POST', 'DELETE'])
 @login_required
