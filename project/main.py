@@ -16,7 +16,7 @@ def index():
 
 @main.route('/profile')
 @login_required
-@swag_from('./profile.yml')
+@swag_from('docs/profile.yml')
 def profile():
     no_of_done = db.session.query(
             Task.id,
