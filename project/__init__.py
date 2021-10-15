@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flasgger import Swagger
+from os import environ
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -15,9 +16,13 @@ def create_app(env=None):
         app.config['SECRET_KEY'] = 'secret-key-goes-here'
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    elif env == None:
+    elif env == 'DEV':
         app.config['SECRET_KEY'] = 'secret-key-goes-here'
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    elif env == None:
+        app.config['SECRET_KEY'] = 'secret-key-goes-here'
+        app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL') or 'sqlite:///db.sqlite'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
